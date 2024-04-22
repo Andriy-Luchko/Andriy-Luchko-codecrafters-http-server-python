@@ -53,17 +53,23 @@ def handleReq(connection, directory):
             res = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + contentLength + b"\r\n\n" + content + b"\n\r\n"
             connection.send(res)
         elif b"files" == pathArray[1]:
+            
             fileName = pathArray[2]
             path = directory + fileName.decode("ascii")
-            if os.path.isfile(path):
-                with open(path, "rb") as file:
-                    fileBody = file.read()
-                    content = fileBody
-                    contentLength = str(len(content)).encode("ascii")
-                    res = b"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + contentLength + b"\r\n\n" + content + b"\n\r\n"
-                    connection.send(res)
+
+            # getting file
+            if data.startswith(b"POST"):
+                print("lfg")
             else:
-                connection.send(failureResponse)
+                if os.path.isfile(path):
+                    with open(path, "rb") as file:
+                        fileBody = file.read()
+                        content = fileBody
+                        contentLength = str(len(content)).encode("ascii")
+                        res = b"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + contentLength + b"\r\n\n" + content + b"\n\r\n"
+                        connection.send(res)
+                else:
+                    connection.send(failureResponse)
         else:
             connection.send(failureResponse)
 
