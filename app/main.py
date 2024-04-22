@@ -61,7 +61,7 @@ def handleReq(connection, directory):
                     print(fileBody)
                     content = fileBody
                     contentLength = str(len(content)).encode("ascii")
-                    res = b"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + contentLength + b"\r\n\n" + content + b"\n\r\n"
+                    res = b"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + contentLength + b"\r\n\n" + content.encode("ascii") + b"\n\r\n"
                     connection.send(res)
         else:
             connection.send(failureResponse)
