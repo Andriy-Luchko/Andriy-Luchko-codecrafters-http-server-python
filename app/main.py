@@ -67,6 +67,8 @@ def handleReq(connection, directory):
         else:
             connection.send(failureResponse)
 
+    connection.close()
+
 
         
 
