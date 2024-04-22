@@ -1,5 +1,5 @@
-# Uncomment this to pass the first stage
 import socket
+import threading
 
 successResponse = "HTTP/1.1 200 OK\r\n\r\n".encode()
 failureResponse = "HTTP/1.1 404 NOT FOUND\r\n\r\n".encode()
@@ -13,7 +13,15 @@ def parse_path(data):
 
 def main():
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
-    connection, address = server_socket.accept()
+    while True:
+        connection, address = server_socket.accept()
+        responseThread = threading.Thread(target=handleReq, args=(connection,))
+        responseThread.start()
+
+
+
+
+def handleReq(connection):
     data = connection.recv(1024)
     path = parse_path(data)
     if b"/" == path:
