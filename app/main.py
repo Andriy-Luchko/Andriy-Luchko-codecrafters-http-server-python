@@ -59,7 +59,7 @@ def handleReq(connection, directory):
 
             # getting file
             if data.startswith(b"POST"):
-                print("lfg")
+                print(data)                
             else:
                 if os.path.isfile(path):
                     with open(path, "rb") as file:
