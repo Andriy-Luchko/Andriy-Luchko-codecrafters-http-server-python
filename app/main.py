@@ -6,13 +6,6 @@ import os
 successResponse = "HTTP/1.1 200 OK\r\n\r\n".encode()
 failureResponse = "HTTP/1.1 404 NOT FOUND\r\n\r\n".encode()
 
-def parse_path(data):
-    lines = data.split(b"\r\n")
-    if len(lines) > 0:
-        path = lines[0].split(b" ")[1]
-        return path
-    return b""
-
 def main():
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
     parser = argparse.ArgumentParser()
@@ -24,8 +17,12 @@ def main():
         responseThread = threading.Thread(target=handleReq, args=(connection, args.directory))
         responseThread.start()
 
-
-
+def parse_path(data):
+    lines = data.split(b"\r\n")
+    if len(lines) > 0:
+        path = lines[0].split(b" ")[1]
+        return path
+    return b""
 
 def handleReq(connection, directory):
     data = connection.recv(1024)
@@ -57,9 +54,7 @@ def handleReq(connection, directory):
             fileName = pathArray[2]
             path = directory + fileName.decode("ascii")
 
-            # getting file
             if data.startswith(b"POST"):
-                print(data)  
                 with open(path, "w") as file:
                     file.write(data.split(b"\r\n")[-1].decode())
                 connection.send("HTTP/1.1 201 OK\r\n\r\n".encode())
@@ -77,10 +72,6 @@ def handleReq(connection, directory):
             connection.send(failureResponse)
 
     connection.close()
-
-
-        
-
 
 if __name__ == "__main__":
     main()
