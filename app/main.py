@@ -61,7 +61,7 @@ def handleReq(connection, directory):
             if data.startswith(b"POST"):
                 print(data)  
                 with open(path, "w") as file:
-                    file.write(str(data.split(b"\r\n")[-1]))
+                    file.write(data.split(b"\r\n")[-1].decode())
                 connection.send("HTTP/1.1 201 OK\r\n\r\n".encode())
             else:
                 if os.path.isfile(path):
